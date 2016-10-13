@@ -10,33 +10,33 @@ import UIKit
 
 class completeTaskViewController: UIViewController {
     
-    var task = Task()
-    var previousVC = TasksViewController()
+    var task :Task? = nil
 
     @IBOutlet weak var labelTask: UILabel!
     
-    @IBAction func completeButtonTapped(_ sender: AnyObject) {
-        previousVC.tasklist.remove(at: previousVC.selectedIndex)
-        previousVC.tableView.reloadData()
-        navigationController!.popViewController(animated: true)
-
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if task.important {
-            labelTask.text = "❗️ \(task.name)"
+        if task!.important {
+            labelTask.text = "❗️ \(task!.name!)"
             
         } else {
-            labelTask.text = task.name
+            labelTask.text = task!.name!
         }
         // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func completeButtonTapped(_ sender: AnyObject) {
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        context.delete(task!)
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
+        navigationController!.popViewController(animated: true)
+        
     }
     
 
